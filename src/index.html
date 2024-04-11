@@ -5,27 +5,29 @@
     </head>
 
     <body>
+        
         <div class="background">
-            <video autoplay loop muted plays-inline id="backgroundVideo">
-                <source src="../background-videos/rain.mp4">
-                Your browser does not support the video tag.
-            </video>
+            <div id="video-container">
+                <video autoplay loop muted plays-inline id="backgroundVideo", src="../background-videos/default.mp4">
+                    Your browser does not support the video tag.
+                </video>
 
-            <div class="info">
-                <div class="time">
-                    <p id="location"> Location </p>
-                    <time id="time"> Time </time>
-                    <p id="date"> Date </p>
-    
+                <div class="info">
+                    <div class="time">
+                        <p id="location"> Location </p>
+                        <time id="time"> Time </time>
+                        <p id="date"> Date </p>
+        
+                    </div>
+                    
+                    <div class="weather">
+                        <p id="weather" style="text-transform: capitalize;"> Weather </p>
+                        <p id="temp"> Temperature </p>
+                        <div id="weatherIcon"></div>
+        
+                    </div>
+        
                 </div>
-                
-                <div class="weather">
-                    <p id="weather" style="text-transform: capitalize;"> Weather </p>
-                    <p id="temp"> Temperature </p>
-                    <div id="weatherIcon"></div>
-    
-                </div>
-    
             </div>
         </div>
         

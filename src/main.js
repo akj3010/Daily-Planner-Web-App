@@ -58,7 +58,7 @@ setWeather = () => {
     const tempElement = document.getElementById("temp");
     const weatherElement = document.getElementById("weather");
     const weatherIconElement = document.getElementById("weatherIcon");
-    const backgroundElement = document.getElementById("background");
+    const videoSrcElement = document.getElementById("backgroundVideo");
 
     success = (position) => {
         //console.log(position);
@@ -83,10 +83,33 @@ setWeather = () => {
             let icon1 = data.weather[0].icon;
             weatherIconElement.innerHTML = `<img src="http://openweathermap.org/img/w/${icon1}.png"/>`;
 
+            console.log(icon1);
+            console.log(videoSrcElement);
+
+            const rain = ["09d", "09n", "10d", "10n", "11d", "11n"];
+            const clear = ["01d", "01n"];
+            const cloudy = ["02d", "02n", "03d", "03n", "04d", "04n"];
             
+            if (rain.includes(icon1)) {
+                videoSrcElement.setAttribute("src", "../background-videos/rain.mp4");
+            }
 
+            else {
+                if (clear.includes(icon1)) {
+                    videoSrcElement.setAttribute("src", "../background-videos/clear_sky.mp4");
+                }
+
+                else {
+                    if (cloudy.includes(icon1)) {
+                        videoSrcElement.setAttribute("src", "../background-videos/cloudy.mp4");
+                    }
+
+                    else {
+                        videoSrcElement.setAttribute("src", "../background-videos/default.mp4");
+                    }
+                }
+            }
         });
-
     }
 
     error = () => {
