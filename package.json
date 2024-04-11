@@ -1,0 +1,14 @@
+{
+  "name": "daily-planner-web-app",
+  "version": "1.0.0",
+  "description": "Testing npm packages and APIs",
+  "main": "main.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Kai Jun",
+  "license": "MIT",
+  "dependencies": {
+    "dayjs": "^1.11.10"
+  }
+}
