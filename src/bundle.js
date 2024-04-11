@@ -4,24 +4,112 @@
 !function(e,t){"object"==typeof exports&&"undefined"!=typeof module?module.exports=t():"function"==typeof define&&define.amd?define(t):(e="undefined"!=typeof globalThis?globalThis:e||self).dayjs_plugin_localizedFormat=t()}(this,(function(){"use strict";var e={LTS:"h:mm:ss A",LT:"h:mm A",L:"MM/DD/YYYY",LL:"MMMM D, YYYY",LLL:"MMMM D, YYYY h:mm A",LLLL:"dddd, MMMM D, YYYY h:mm A"};return function(t,o,n){var r=o.prototype,i=r.format;n.en.formats=e,r.format=function(t){void 0===t&&(t="YYYY-MM-DDTHH:mm:ssZ");var o=this.$locale().formats,n=function(t,o){return t.replace(/(\[[^\]]+])|(LTS?|l{1,4}|L{1,4})/g,(function(t,n,r){var i=r&&r.toUpperCase();return n||o[r]||e[r]||o[i].replace(/(\[[^\]]+])|(MMMM|MM|DD|dddd)/g,(function(e,t,o){return t||o.slice(1)}))}))}(t,void 0===o?{}:o);return i.call(this,n)}}}));
 },{}],3:[function(require,module,exports){
 const dayjs = require('dayjs')
-var localizedFormat = require('dayjs/plugin/localizedFormat')
+const localizedFormat = require('dayjs/plugin/localizedFormat')
 //import dayjs from 'dayjs' // ES 2015
 dayjs.extend(localizedFormat);
 
 
 setDateTime = () => {
     let curTime = Date();
-    var element = document.getElementById("date");
-    element.innerText = dayjs(curTime).format('LL');
+    const dateElement = document.getElementById("date");
+    dateElement.innerText = dayjs(curTime).format('dddd, D MMMM YYYY');
 
-    var element = document.getElementById("time");
-    element.innerText = dayjs(curTime).format('LTS');
+    const timeElement = document.getElementById("time");
+    timeElement.innerText = dayjs(curTime).format('LTS');
 
-    console.log(dayjs(curTime).format('llll'));
+    // console.log(dayjs(curTime).format('llll'));
 }
 
-setInterval(setDateTime, 1000);
+
+findLocation = () => {
+    const locationElement = document.getElementById("location");
+
+    success = (position) => {
+        //console.log(position);
+        
+        const latitude = position.coords.latitude;
+        const longitude = position.coords.longitude;
+
+        const geoAPIURL = `https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${latitude}&longitude=${longitude}&localityLanguage=en`
+
+        fetch(geoAPIURL)
+        .then(res => res.json())
+        .then(data => {
+            //console.log(data)
+            const countryName = data.countryName;
+            const locality = data.locality;
+
+            locationElement.innerText = `${locality}, ${countryName}`
 
 
+        })
+
+        //locationElement.innerText = position
+        
+
+    }
+
+    error = () => {
+        locationElement.innerText = "Unable to retrieve location";
+
+    }
+
+    navigator.geolocation.getCurrentPosition(success, error);
+
+}
+
+
+setWeather = () => {
+    const tempElement = document.getElementById("temp");
+    const weatherElement = document.getElementById("weather");
+    const weatherIconElement = document.getElementById("weatherIcon");
+    const backgroundElement = document.getElementById("background");
+
+    success = (position) => {
+        //console.log(position);
+        
+        const latitude = position.coords.latitude;
+        const longitude = position.coords.longitude;
+        const kelvin = 273.15;
+        
+        const apiKey = 'ee25328b304dd9d21c56964fedc87771';
+        const apiUrl = `http://api.openweathermap.org/data/2.5/weather?lat=${latitude}&lon=${longitude}&appid=${apiKey}`;
+        
+        fetch(apiUrl)
+        .then((response) => {
+            return response.json();
+
+        })
+        .then((data) => {
+            //console.log(data);
+            tempElement.innerText = `${(data.main.temp - kelvin).toFixed(1)}°C`;
+            weatherElement.innerText = data.weather[0].description;
+            
+            let icon1 = data.weather[0].icon;
+            weatherIconElement.innerHTML = `<img src="http://openweathermap.org/img/w/${icon1}.png"/>`;
+
+            
+
+        });
+
+    }
+
+    error = () => {
+        tempElement.innerText = "Unable to retrieve temperature";
+        weatherElement.innerText = "Unable to retrieve weather";
+
+    }
+
+    navigator.geolocation.getCurrentPosition(success, error);
+
+}
+
+
+window.addEventListener("load", () => {
+    setWeather();
+    findLocation();
+    setInterval(setDateTime, 1000);
+
+});
 
 },{"dayjs":1,"dayjs/plugin/localizedFormat":2}]},{},[3]);
